@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * The hero is an illustrated 1440×900 canvas. Every measurement is expressed
@@ -70,9 +71,25 @@ const HEADSTOCK_STRINGS: StringLine[] = [
   line(12, 1019, 388, 171, 114, -33.69, 205.516),
 ];
 
-/** Standard tuning, top string to bottom string (Hz). */
-const NOTES = [82.41, 110.0, 146.83, 196.0, 246.94, 329.63];
-const NOTE_NAMES = ["E", "A", "D", "G", "B", "high E"];
+/** CGDGBD tuning (C2 G2 D3 G3 B3 D4), top string to bottom string (Hz). */
+const NOTES = [65.41, 98.0, 146.83, 196.0, 246.94, 293.66];
+const NOTE_NAMES = ["C", "G", "D", "G", "B", "high D"];
+
+/**
+ * Pages revealed on each string, top to bottom. `at` is how far along the
+ * string (design px from its left end) the label sits — staggered so the
+ * labels step diagonally down the neck. The bottom string has no page.
+ */
+const STRING_LINKS: ({ label: string; href: string; at: number } | null)[] = [
+  { label: "projects", href: "/projects", at: 470 },
+  { label: "experience", href: "/experience", at: 530 },
+  { label: "about me", href: "/about", at: 590 },
+  { label: "blog posts", href: "/blog", at: 650 },
+  { label: "resume", href: "/resume", at: 710 },
+  null,
+];
+
+const NAME = "CAITLIN";
 
 /** Karplus–Strong plucked-string synthesis. */
 function pluck(ctx: AudioContext, frequency: number) {
@@ -110,7 +127,7 @@ function LineArt({
 }) {
   return (
     <div
-      className="absolute flex items-center justify-center"
+      className="absolute flex items-center justify-center [&:has(:hover,:focus-visible)]:z-10"
       style={{
         left: u(s.left),
         top: u(s.top),
@@ -141,15 +158,33 @@ export default function GuitarHero() {
   const audioRef = useRef<AudioContext | null>(null);
   const [plucks, setPlucks] = useState<number[]>(() => STRINGS.map(() => 0));
 
+  // Browsers only allow audio after a user gesture (click, tap, key press),
+  // and hovering doesn't count. Unlock the audio context on the first one.
+  useEffect(() => {
+    const unlock = () => {
+      try {
+        audioRef.current ??= new AudioContext();
+        if (audioRef.current.state === "suspended") {
+          void audioRef.current.resume();
+        }
+      } catch {
+        // Audio unavailable.
+      }
+    };
+    const events = ["pointerdown", "keydown", "touchstart"] as const;
+    events.forEach((e) => window.addEventListener(e, unlock, { passive: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, unlock));
+  }, []);
+
   const play = (i: number) => {
     setPlucks((p) => p.map((v, j) => (j === i ? v + 1 : v)));
-    try {
-      audioRef.current ??= new AudioContext();
-      const ctx = audioRef.current;
-      if (ctx.state === "suspended") void ctx.resume();
-      pluck(ctx, NOTES[i]);
-    } catch {
-      // Audio unavailable — the visual pluck still plays.
+    const ctx = audioRef.current;
+    if (ctx?.state === "running") {
+      try {
+        pluck(ctx, NOTES[i]);
+      } catch {
+        // Audio failed — the visual pluck still plays.
+      }
     }
   };
 
@@ -174,16 +209,26 @@ export default function GuitarHero() {
 
       <h1>
         <span
-          className="absolute font-hand leading-[1.03]"
+          className="animate-hi-in absolute font-hand leading-[1.03]"
           style={{ left: u(337), top: u(59), width: u(239), fontSize: u(80) }}
         >
           Hi, I’m
         </span>{" "}
         <span
-          className="absolute font-display leading-[1.03]"
+          className="absolute whitespace-nowrap font-display leading-[1.03]"
           style={{ left: u(562), top: u(4), width: u(725), fontSize: u(200) }}
         >
-          CAITLIN
+          <span className="sr-only">{NAME}</span>
+          {NAME.split("").map((letter, i) => (
+            <span
+              key={i}
+              aria-hidden
+              className="animate-letter-drop inline-block"
+              style={{ animationDelay: `${300 + i * 90}ms` }}
+            >
+              {letter}
+            </span>
+          ))}
         </span>
       </h1>
 
@@ -200,15 +245,10 @@ export default function GuitarHero() {
         <p>Seeking Summer 2027 Co-ops!</p>
       </div>
 
-      {STRINGS.map((s, i) => (
-        <LineArt key={s.src} s={s}>
-          <button
-            type="button"
-            onClick={() => play(i)}
-            aria-label={`Pluck the ${NOTE_NAMES[i]} string`}
-            className="group relative block cursor-pointer"
-            style={{ width: u(s.length), height: u(s.thickness) }}
-          >
+      {STRINGS.map((s, i) => {
+        const link = STRING_LINKS[i];
+        const content = (
+          <>
             {/* generous invisible hit area around the thin string */}
             <span
               aria-hidden
@@ -218,15 +258,53 @@ export default function GuitarHero() {
             <span
               key={plucks[i]}
               aria-hidden
-              className={`absolute inset-0 block transition-opacity group-hover:opacity-70 group-focus-visible:opacity-70 ${
+              className={`absolute inset-0 block ${
                 plucks[i] > 0 ? "animate-string-vibrate" : ""
               }`}
             >
               <StrokeImage s={s} />
             </span>
-          </button>
-        </LineArt>
-      ))}
+            {link && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute translate-y-1 whitespace-nowrap rounded-full border-forest bg-cream font-hand leading-none text-forest opacity-0 shadow-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+                style={{
+                  left: u(link.at),
+                  bottom: u(6),
+                  fontSize: u(28),
+                  padding: `${u(4)} ${u(12)} ${u(6)}`,
+                  borderWidth: u(2),
+                }}
+              >
+                {link.label}
+              </span>
+            )}
+          </>
+        );
+        const shared = {
+          onPointerEnter: () => play(i),
+          onFocus: () => play(i),
+          className: "group relative block outline-none",
+          style: { width: u(s.length), height: u(s.thickness) },
+        };
+        return (
+          <LineArt key={s.src} s={s}>
+            {link ? (
+              <Link href={link.href} aria-label={link.label} {...shared}>
+                {content}
+              </Link>
+            ) : (
+              <span
+                aria-label={`${NOTE_NAMES[i]} string`}
+                role="img"
+                {...shared}
+              >
+                {content}
+              </span>
+            )}
+          </LineArt>
+        );
+      })}
 
       {HEADSTOCK_STRINGS.map((s) => (
         <LineArt key={s.src} s={s}>
