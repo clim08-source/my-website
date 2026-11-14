@@ -32,12 +32,14 @@ const TOOLKIT = [
   { name: "Claude Code", icon: "/home/claude.svg" },
 ];
 
-// TODO: replace with real profile URLs.
+const GITHUB_URL = "https://github.com/clim08-source"; 
+const EMAIL = "c55lim@uwaterloo.ca";
+const LINKEDIN_URL = "https://www.linkedin.com/in/limcaitlin/"; 
 const SOCIALS = [
-  { label: "GitHub", icon: "/home/github.svg", href: "#" },
-  { label: "Email", icon: "/home/email.svg", href: "#" },
-  { label: "LinkedIn", icon: "/home/linkedin.svg", href: "#" },
-];
+  { label: "GitHub", icon: "/home/github.svg", href: GITHUB_URL },
+  { label: "Email", icon: "/home/email.svg", href: EMAIL && `mailto:${EMAIL}` },
+  { label: "LinkedIn", icon: "/home/linkedin.svg", href: LINKEDIN_URL },
+].filter((s) => s.href);
 
 const FOOTER_LINKS = [
   { label: "Home", href: "/", width: "md:w-[70px]" },
@@ -126,6 +128,10 @@ export default function Home() {
                 <a
                   href={s.href}
                   aria-label={s.label}
+                  {...(s.href.startsWith("http") && {
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                  })}
                   className="flex size-[44px] items-center justify-center rounded-full transition-colors hover:bg-black/5"
                 >
                   <Image src={s.icon} alt="" width={24} height={24} />
