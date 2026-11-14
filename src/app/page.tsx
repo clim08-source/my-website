@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import BronzeMedal from "@/components/BronzeMedal";
 import GuitarHero from "@/components/GuitarHero";
 
 const TECH = {
@@ -18,7 +19,7 @@ type Project = {
   alt: string;
   fit: string;
   tech: (keyof typeof TECH)[];
-  award?: { place: string; event: string };
+  award?: { title: string; event: string };
 };
 
 const PROJECTS: Project[] = [
@@ -39,7 +40,7 @@ const PROJECTS: Project[] = [
     alt: "HomeBuddy voice assistant interface greeting a patient",
     fit: "object-cover",
     tech: ["React", "TypeScript", "Gemini Live API", "Supabase", "Figma"],
-    award: { place: "Third", event: "WiE Hackathon" },
+    award: { title: "Winner", event: "WiE Hackathon" },
   },
 ];
 
@@ -93,17 +94,11 @@ export default function Home() {
                     className={`${p.fit} transition-transform duration-300 group-hover:scale-[1.02]`}
                   />
                   {p.award && (
-                    <span className="absolute top-3 right-3 flex items-center gap-2 rounded-full border-2 border-[#f3c89a]/70 bg-linear-to-br from-[#e0a46a] via-[#cd7f32] to-[#8c5523] py-1.5 pr-4 pl-1.5 text-white shadow-md">
-                      <span
-                        aria-hidden
-                        className="flex size-7 items-center justify-center rounded-full bg-[#8c5523] font-display text-[15px] leading-none ring-2 ring-[#f3c89a]/80"
-                      >
-                        3
-                      </span>
-                      <span className="font-display text-[15px] leading-none tracking-wide uppercase">
-                        {p.award.place} – {p.award.event}
-                      </span>
-                    </span>
+                    <BronzeMedal
+                      title={p.award.title}
+                      subtitle={p.award.event}
+                      className="absolute top-[4%] right-[3%] w-[clamp(64px,19%,124px)]"
+                    />
                   )}
                 </div>
                 <div className="mt-[21px] flex items-start justify-between gap-4">
