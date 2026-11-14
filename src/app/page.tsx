@@ -1,69 +1,154 @@
 import Image from "next/image";
+import Link from "next/link";
+import GuitarHero from "@/components/GuitarHero";
+
+const PROJECTS = [
+  {
+    title: "PWHL VS NHL",
+    description:
+      "Statistical analysis of play in the Professional Women’s Hockey league (PWHL) versus the National Hockey League (NHL)",
+    image: "/home/project-pwhl.png",
+    alt: "Hex-bin shot location maps comparing the PWHL and NHL",
+    fit: "object-contain",
+  },
+  {
+    title: "HOMEBUDDY",
+    description:
+      "AI assistant helping seniors age at home instead of a care facility",
+    image: "/home/project-homebuddy.png",
+    alt: "HomeBuddy voice assistant interface greeting a patient",
+    fit: "object-cover",
+  },
+] as const;
+
+const TOOLKIT = [
+  { name: "R", icon: "/home/r.svg" },
+  { name: "Next.js", icon: "/home/nextjs.svg" },
+  { name: "React", icon: "/home/react.svg", inset: "12.5% 2.19% 0.16% 0" },
+  { name: "Python", icon: "/home/python.svg" },
+  { name: "Tailwind CSS", icon: "/home/tailwindcss.svg" },
+  { name: "Figma", icon: "/home/figma.svg" },
+  { name: "TypeScript", icon: "/home/typescript.svg" },
+  { name: "Claude Code", icon: "/home/claude.svg" },
+];
+
+// TODO: replace with real profile URLs.
+const SOCIALS = [
+  { label: "GitHub", icon: "/home/github.svg", href: "#" },
+  { label: "Email", icon: "/home/email.svg", href: "#" },
+  { label: "LinkedIn", icon: "/home/linkedin.svg", href: "#" },
+];
+
+const FOOTER_LINKS = [
+  { label: "Home", href: "/", width: "md:w-[70px]" },
+  { label: "Projects", href: "/projects", width: "md:w-[90px]" },
+  { label: "Experience", href: "/experience", width: "md:w-[100px]" },
+  { label: "About me", href: "/about", width: "md:w-[106px]" },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="flex flex-1 flex-col bg-cream text-forest">
+      <main className="flex flex-col">
+        <GuitarHero />
+
+        {/* Recent projects */}
+        <section className="mx-auto w-full max-w-[1440px] px-4 pt-[82px] pb-16 md:px-16">
+          <h2 className="font-display text-[48px] leading-normal">
+            RECENT PROJECTS
+          </h2>
+          <div className="mt-9 grid gap-[30px] md:grid-cols-2">
+            {PROJECTS.map((p) => (
+              <Link key={p.title} href="/projects" className="group block">
+                <div className="relative aspect-[641/294] overflow-hidden bg-white">
+                  <Image
+                    src={p.image}
+                    alt={p.alt}
+                    fill
+                    sizes="(min-width: 1440px) 641px, (min-width: 768px) 45vw, 100vw"
+                    className={`${p.fit} transition-transform duration-300 group-hover:scale-[1.02]`}
+                  />
+                </div>
+                <div className="mt-[21px] flex items-start justify-between gap-4">
+                  <h3 className="font-display text-[31px] leading-normal">
+                    {p.title}
+                  </h3>
+                  {/* play_arrow_filled (Material 3) */}
+                  <Image
+                    src="/home/play-arrow.svg"
+                    alt=""
+                    width={36}
+                    height={37}
+                    className="mr-[15px] h-[37px] w-[36px] shrink-0 transition-transform group-hover:translate-x-1"
+                  />
+                </div>
+                <p className="mt-[9px] text-[17px] leading-normal">
+                  {p.description}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Toolkit */}
+        <section className="min-h-[340px] bg-sand">
+          <div className="mx-auto w-full max-w-[1440px] px-4 pt-[29px] pb-10 md:px-16">
+            <h2 className="font-display text-[42px] leading-normal">
+              TOOLKIT
+            </h2>
+            <ul className="mt-8 flex flex-wrap gap-x-[66px] gap-y-8 md:pl-[25px]">
+              {TOOLKIT.map((t) => (
+                <li key={t.name} className="flex w-[100px] flex-col items-center">
+                  <div className="relative size-[100px]">
+                    <div
+                      className="absolute"
+                      style={{ inset: "inset" in t ? t.inset : 0 }}
+                    >
+                      <Image src={t.icon} alt="" fill unoptimized />
+                    </div>
+                  </div>
+                  <span className="mt-[35px] w-[111px] text-center font-hand text-[30px] leading-[0.8] text-black">
+                    {t.name}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
       </main>
+
+      <footer className="bg-cream">
+        <div className="relative mx-auto flex h-[72px] w-full max-w-[1440px] items-center justify-between px-4 md:pr-16 md:pl-[54px]">
+          <div className="absolute inset-x-4 top-0 h-px bg-rule md:inset-x-16" />
+          <ul className="flex gap-[10px]">
+            {SOCIALS.map((s) => (
+              <li key={s.label}>
+                <a
+                  href={s.href}
+                  aria-label={s.label}
+                  className="flex size-[44px] items-center justify-center rounded-full transition-colors hover:bg-black/5"
+                >
+                  <Image src={s.icon} alt="" width={24} height={24} />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <nav aria-label="Footer">
+            <ul className="flex gap-3 md:gap-[22px]">
+              {FOOTER_LINKS.map((l) => (
+                <li key={l.label} className={l.width}>
+                  <Link
+                    href={l.href}
+                    className="block py-[13px] pl-1 text-[14px] leading-normal underline hover:opacity-70"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </footer>
     </div>
   );
 }
