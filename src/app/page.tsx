@@ -2,7 +2,26 @@ import Image from "next/image";
 import Link from "next/link";
 import GuitarHero from "@/components/GuitarHero";
 
-const PROJECTS = [
+const TECH = {
+  R: "/home/r.svg",
+  React: "/home/react.svg",
+  TypeScript: "/home/typescript.svg",
+  "Gemini Live API": "/home/gemini.svg",
+  Supabase: "/home/supabase.svg",
+  Figma: "/home/figma.svg",
+};
+
+type Project = {
+  title: string;
+  description: string;
+  image: string;
+  alt: string;
+  fit: string;
+  tech: (keyof typeof TECH)[];
+  award?: { place: string; event: string };
+};
+
+const PROJECTS: Project[] = [
   {
     title: "PWHL VS NHL",
     description:
@@ -10,6 +29,7 @@ const PROJECTS = [
     image: "/home/project-pwhl.png",
     alt: "Hex-bin shot location maps comparing the PWHL and NHL",
     fit: "object-contain",
+    tech: ["R"],
   },
   {
     title: "HOMEBUDDY",
@@ -18,8 +38,10 @@ const PROJECTS = [
     image: "/home/project-homebuddy.png",
     alt: "HomeBuddy voice assistant interface greeting a patient",
     fit: "object-cover",
+    tech: ["React", "TypeScript", "Gemini Live API", "Supabase", "Figma"],
+    award: { place: "Third", event: "WiE Hackathon" },
   },
-] as const;
+];
 
 const TOOLKIT = [
   { name: "R", icon: "/home/r.svg" },
@@ -70,6 +92,19 @@ export default function Home() {
                     sizes="(min-width: 1440px) 641px, (min-width: 768px) 45vw, 100vw"
                     className={`${p.fit} transition-transform duration-300 group-hover:scale-[1.02]`}
                   />
+                  {p.award && (
+                    <span className="absolute top-3 right-3 flex items-center gap-2 rounded-full border-2 border-[#f3c89a]/70 bg-linear-to-br from-[#e0a46a] via-[#cd7f32] to-[#8c5523] py-1.5 pr-4 pl-1.5 text-white shadow-md">
+                      <span
+                        aria-hidden
+                        className="flex size-7 items-center justify-center rounded-full bg-[#8c5523] font-display text-[15px] leading-none ring-2 ring-[#f3c89a]/80"
+                      >
+                        3
+                      </span>
+                      <span className="font-display text-[15px] leading-none tracking-wide uppercase">
+                        {p.award.place} – {p.award.event}
+                      </span>
+                    </span>
+                  )}
                 </div>
                 <div className="mt-[21px] flex items-start justify-between gap-4">
                   <h3 className="font-display text-[31px] leading-normal">
@@ -84,9 +119,27 @@ export default function Home() {
                     className="mr-[15px] h-[37px] w-[36px] shrink-0 transition-transform group-hover:translate-x-1"
                   />
                 </div>
-                <p className="mt-[9px] text-[17px] leading-normal">
+                <p className="mt-[9px] text-[17px] leading-normal text-black">
                   {p.description}
                 </p>
+                <ul aria-label="Built with" className="mt-4 flex flex-wrap gap-2.5">
+                  {p.tech.map((name) => (
+                    <li
+                      key={name}
+                      title={name}
+                      className="flex size-11 items-center justify-center rounded-[24%] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.08),0_3px_8px_rgba(0,0,0,0.08)] ring-1 ring-black/5"
+                    >
+                      <Image
+                        src={TECH[name]}
+                        alt={name}
+                        width={26}
+                        height={26}
+                        className="size-[26px] object-contain"
+                        unoptimized
+                      />
+                    </li>
+                  ))}
+                </ul>
               </Link>
             ))}
           </div>
