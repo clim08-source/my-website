@@ -209,7 +209,7 @@ export default function GuitarHero() {
 
       <h1>
         <span
-          className="animate-hi-in absolute font-hand leading-[1.03]"
+          className="animate-hi-in absolute font-hand leading-[1.03] text-black"
           style={{ left: u(337), top: u(59), width: u(239), fontSize: u(80) }}
         >
           Hi, I’m
