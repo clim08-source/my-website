@@ -5,7 +5,7 @@
   --color-sand: #eae7dc;
   --color-forest: #5D9253;
   --color-rule: #cdcdbf;
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-commissioner);
   --font-display: var(--font-bogle);
   --font-hand: var(--font-handwriting);
 }
@@ -13,7 +13,7 @@
 body {
   background: var(--color-cream);
   color: var(--color-forest);
-  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  font-family: var(--font-commissioner), Arial, Helvetica, sans-serif;
 }
 
 /* Guitar string "pluck" vibration */

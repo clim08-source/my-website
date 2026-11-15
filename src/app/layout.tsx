@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { BBH_Bogle, Inter } from "next/font/google";
+import { BBH_Bogle, Commissioner } from "next/font/google";
 import localFont from "next/font/local";
 import Image from "next/image";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const commissioner = Commissioner({
+  variable: "--font-commissioner",
   subsets: ["latin"],
 });
 
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${bogle.variable} ${handwriting.variable} h-full antialiased`}
+      className={`${commissioner.variable} ${bogle.variable} ${handwriting.variable} h-full antialiased`}
     >
       <body className="relative min-h-full flex flex-col">
         {/* Plain <a> (not <Link>) so clicking it on the home page does a full
