@@ -21,8 +21,10 @@ function laurelLeaves(side: "left" | "right") {
     for (const offset of [-3.6, 3.6]) {
       const rr = r + offset;
       leaves.push({
-        x: cx + rr * Math.cos(rad),
-        y: cy + rr * Math.sin(rad),
+        // Rounded so the server and the browser, whose trig results can
+        // differ in the last digit, render identical markup.
+        x: +(cx + rr * Math.cos(rad)).toFixed(3),
+        y: +(cy + rr * Math.sin(rad)).toFixed(3),
         // leaves splay outward/inward from the stem
         rotate:
           tangent + 90 + (offset > 0 ? -35 : 35) * (side === "left" ? 1 : -1),

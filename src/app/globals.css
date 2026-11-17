@@ -95,3 +95,29 @@ body {
     animation: none;
   }
 }
+
+/* Project popup: lock the page behind it and pop the frame in */
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+@keyframes popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-popup-in {
+  animation: popup-in 0.25s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-popup-in {
+    animation: none;
+  }
+}
