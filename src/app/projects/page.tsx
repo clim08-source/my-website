@@ -67,8 +67,10 @@ export default function Page() {
     <div className="flex flex-1 flex-col bg-cream text-forest">
       <main className="flex flex-col">
         {/* Like the home hero, this is an illustrated canvas that scales
-            proportionally with the viewport (capped at 1440px). */}
-        <section className="@container relative mx-auto w-full max-w-[1440px] overflow-hidden pb-[calc(80*100cqw/1440)]">
+            proportionally with the viewport (capped at 1440px). overflow-clip
+            rather than overflow-hidden: a hidden box can still be scrolled by
+            the browser (e.g. to a #hash target), which cuts off the title. */}
+        <section className="@container relative mx-auto w-full max-w-[1440px] overflow-clip pb-[calc(80*100cqw/1440)]">
           {ART.map((a) => (
             // eslint-disable-next-line @next/next/no-img-element -- decorative SVG stretched to its design slot
             <img

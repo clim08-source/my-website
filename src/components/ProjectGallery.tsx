@@ -150,7 +150,6 @@ export default function ProjectGallery({
           return (
             <button
               key={p.slug}
-              id={p.slug}
               type="button"
               aria-label={`Open ${p.title}`}
               aria-haspopup="dialog"
